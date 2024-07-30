@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -48,15 +49,21 @@ namespace LazyRedpaw.FigmaToUnity
             }
             _pathProp.stringValue = EditorGUILayout.TextField(_pathProp.stringValue);
             EditorGUILayout.EndHorizontal();
-            bool isPathValid = _pathProp.stringValue.StartsWith(Application.dataPath) ||
-                               _pathProp.stringValue.StartsWith(DefaultSavePath);
+            bool isPathValid = (_pathProp.stringValue.StartsWith(Application.dataPath) ||
+                               _pathProp.stringValue.StartsWith(DefaultSavePath)) &&
+                               Directory.Exists( _pathProp.stringValue);
             if (_pathProp.stringValue.StartsWith(Application.dataPath))
             {
                 _pathProp.stringValue = DefaultSavePath + _pathProp.stringValue.Substring(Application.dataPath.Length);
             }
             else if(!_pathProp.stringValue.StartsWith(DefaultSavePath))
             {
-                string errorMessage = "Please select a folder within the project directory.";
+                string errorMessage = "Please select an existing folder within the project directory.";
+                EditorGUILayout.HelpBox(errorMessage, MessageType.Error);
+            }
+            else if(!Directory.Exists( _pathProp.stringValue))
+            {
+                string errorMessage = "The selected directory does not exist.";
                 EditorGUILayout.HelpBox(errorMessage, MessageType.Error);
             }
 
