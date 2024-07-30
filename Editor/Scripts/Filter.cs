@@ -8,6 +8,7 @@ namespace LazyRedpaw.FigmaToUnity
     public class Filter
     {
         [SerializeReference] private List<FilterCondition> _filterConditions;
+        [SerializeField] private bool _areAllConditionsRequired;
         [SerializeField] private bool _isFilterApplied;
         [SerializeField] private int _filterVersion;
 
@@ -24,18 +25,6 @@ namespace LazyRedpaw.FigmaToUnity
             return false;
         }
         
-        public bool IsItemApproved(RequestImageData imageData)
-        {
-            for (int i = 0; i < _filterConditions.Count; i++)
-            {
-                if (_filterConditions[i].IsEnabled && !_filterConditions[i].IsTrue(imageData))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        
         public void Apply()
         {
             _isFilterApplied = true;
@@ -50,6 +39,35 @@ namespace LazyRedpaw.FigmaToUnity
             {
                 _filterConditions[i].Clear();
             }
+        }
+
+        public bool IsFilterMet(RequestImageData imageData)
+        {
+            return _areAllConditionsRequired ? AreAllConditionsMet(imageData) : AreAnyConditionsMet(imageData);
+        }
+        
+        private bool AreAllConditionsMet(RequestImageData imageData)
+        {
+            for (int i = 0; i < _filterConditions.Count; i++)
+            {
+                if (_filterConditions[i].IsEnabled && !_filterConditions[i].IsTrue(imageData))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        private bool AreAnyConditionsMet(RequestImageData imageData)
+        {
+            for (int i = 0; i < _filterConditions.Count; i++)
+            {
+                if (_filterConditions[i].IsEnabled && _filterConditions[i].IsTrue(imageData))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

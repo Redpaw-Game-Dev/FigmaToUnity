@@ -84,7 +84,7 @@ namespace LazyRedpaw.FigmaToUnity
             if(_filteredData.Count > 0) _filteredData.Clear();
             for (int i = 0; i < _data.Count; i++)
             {
-                if(_filter.IsItemApproved(_data[i])) _filteredData.Add(_data[i]);
+                if(_filter.IsFilterMet(_data[i])) _filteredData.Add(_data[i]);
             }
         }
         

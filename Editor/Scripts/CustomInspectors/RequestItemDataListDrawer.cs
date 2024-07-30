@@ -38,9 +38,11 @@ namespace LazyRedpaw.FigmaToUnity
                 float height = property.isExpanded 
                     ? _list.GetHeight() + EditorGUIUtility.singleLineHeight
                     : EditorGUIUtility.singleLineHeight;
-                height += GetActionsBoxHeight();
+                height += GetActionsBoxHeight(filterProp.FindPropertyRelative(CommonEditorVars.IsFilterApplied).boolValue);
                 height += EditorGUI.GetPropertyHeight(filterProp);
                 if (IsAnyElementWithEmptyProp()) height += InfoBoxHeight;
+                (int equalUrlElementsCount, List<string> repeatedUrls) = GetEqualUrlElementsCountAndRepeatedUrls();
+                if (equalUrlElementsCount > 0) height += GetRepeatedUrlsElementHeight(repeatedUrls.Count);
                 return height;
             }
             return EditorGUIUtility.singleLineHeight;
@@ -69,17 +71,25 @@ namespace LazyRedpaw.FigmaToUnity
                 elementRect.width = position.width - elementRect.x * 0.5f;
                 elementRect.height = EditorGUI.GetPropertyHeight(filterProp);
                 EditorGUI.PropertyField(elementRect, filterProp);
-                
-                
+
+                bool isFilterApplied = filterProp.FindPropertyRelative(CommonEditorVars.IsFilterApplied).boolValue;
                 elementRect.y += elementRect.height + EditorGUIUtility.standardVerticalSpacing;
-                elementRect.height = GetActionsBoxHeight();
-                DrawActionsBox(elementRect);
+                elementRect.height = GetActionsBoxHeight(isFilterApplied);
+                DrawActionsBox(elementRect, isFilterApplied);
 
                 if (IsAnyElementWithEmptyProp())
                 {
                     elementRect.y += elementRect.height + EditorGUIUtility.standardVerticalSpacing;
                     elementRect.height = InfoBoxHeight;
                     DrawInfoBox(elementRect);
+                }
+
+                (int equalUrlElementsCount, List<string> repeatedUrls) = GetEqualUrlElementsCountAndRepeatedUrls();
+                if (equalUrlElementsCount > 0)
+                {
+                    elementRect.y += elementRect.height + EditorGUIUtility.standardVerticalSpacing;
+                    elementRect.height = GetRepeatedUrlsElementHeight(repeatedUrls.Count);
+                    DrawRepeatedUrlsElement(elementRect, equalUrlElementsCount, repeatedUrls);
                 }
 
                 elementRect.x = position.x;
@@ -121,7 +131,48 @@ namespace LazyRedpaw.FigmaToUnity
             if (count > 0) message += $" missed image: {count};";
             EditorGUI.HelpBox(elementRect, message, MessageType.Warning);
         }
+        
+        private void DrawRepeatedUrlsElement(Rect elementRect, int count, List<string> urls)
+        {
+            string message = $"Elements with equal urls: {count}";
+            elementRect.height = InfoBoxHeight;
+            EditorGUI.HelpBox(elementRect, message, MessageType.Warning);
+            elementRect.y += elementRect.height + EditorGUIUtility.standardVerticalSpacing;
+            elementRect.height = EditorGUIUtility.singleLineHeight;
+            elementRect.x -= CommonEditorVars.ToggleSize;
+            elementRect.width += CommonEditorVars.ToggleSize;
+            EditorGUI.LabelField(elementRect, "Repeated URLs");
+            GUI.enabled = false;
+            for (int i = 0; i < urls.Count; i++)
+            {
+                elementRect.y += elementRect.height + EditorGUIUtility.standardVerticalSpacing;
+                EditorGUI.TextField(elementRect, urls[i]);
+            }
+            GUI.enabled = true;
+        }
 
+        private (int, List<string>) GetEqualUrlElementsCountAndRepeatedUrls()
+        {
+            int count = 0;
+            List<string> urls = new List<string>();
+            for (int i = 0; i < _list.serializedProperty.arraySize; i++)
+            {
+                string url1 = _list.serializedProperty.GetArrayElementAtIndex(i).FindPropertyRelative(CommonEditorVars.URL).stringValue;
+                for (int j = 0; j < _list.serializedProperty.arraySize; j++)
+                {
+                    if(i == j) continue;
+                    string url2 = _list.serializedProperty.GetArrayElementAtIndex(j).FindPropertyRelative(CommonEditorVars.URL).stringValue;
+                    if (url1.Equals(url2))
+                    {
+                        count++;
+                        if(!urls.Contains(url1)) urls.Add(url1);
+                        break;
+                    }
+                }
+            }
+            return (count, urls);
+        }
+        
         private int GetElementCountWithEmptyProp(string propName)
         {
             int count = 0;
@@ -158,7 +209,7 @@ namespace LazyRedpaw.FigmaToUnity
             return false;
         }
         
-        private void DrawActionsBox(Rect position)
+        private void DrawActionsBox(Rect position, bool isFilterApplied)
         {
             GUI.Box(position, GUIContent.none, EditorStyles.helpBox);
             
@@ -168,8 +219,18 @@ namespace LazyRedpaw.FigmaToUnity
             
             if (_isActionsExpanded)
             {
+                if (isFilterApplied)
+                {
+                    elementRect.width -= CommonEditorVars.SpacingWidth * 2f;
+                    elementRect.x += CommonEditorVars.SpacingWidth;
+                    elementRect.y += elementRect.height + EditorGUIUtility.standardVerticalSpacing;
+                    elementRect.height = InfoBoxHeight;
+                    EditorGUI.HelpBox(elementRect, "The filter is applied. All actions will affect only the filtered list.", MessageType.Info);
+                }
                 elementRect.y += elementRect.height + EditorGUIUtility.standardVerticalSpacing;
-                elementRect.width = position.width * 0.333f;
+                elementRect.height = EditorGUIUtility.singleLineHeight;
+                elementRect.width = position.width * 0.333f - CommonEditorVars.ToggleSize * 2f;
+                elementRect.x = position.x + CommonEditorVars.ToggleSize * 2f;
                 if (DoesAnyListItemHaveIsIncludedProp())
                 {
                     if (IsAnyListItemExcluded())
@@ -188,10 +249,10 @@ namespace LazyRedpaw.FigmaToUnity
                     GUI.enabled = true;
                 }
                 
-                elementRect.x += elementRect.width;
+                elementRect.x += elementRect.width + CommonEditorVars.ToggleSize;
                 if (GUI.Button(elementRect, new GUIContent("Remove Items", "Remove all items from list"))) UseMethodForEntireList("RemoveItem");
                 
-                elementRect.x += elementRect.width;
+                elementRect.x += elementRect.width + CommonEditorVars.ToggleSize;
                 if (GUI.Button(elementRect,  new GUIContent("Delete Items", "Delete all images from project"))) UseMethodForEntireList("DeleteItem");
             }
         }
@@ -252,11 +313,19 @@ namespace LazyRedpaw.FigmaToUnity
             }
         }
         
-        private float GetActionsBoxHeight()
+        private float GetActionsBoxHeight(bool isFilterApplied)
         {
             return _isActionsExpanded
-                ? EditorGUIUtility.singleLineHeight * 2f + EditorGUIUtility.standardVerticalSpacing * 2f
+                ? isFilterApplied 
+                    ? EditorGUIUtility.singleLineHeight * 2f + EditorGUIUtility.standardVerticalSpacing * 3f + InfoBoxHeight
+                    : EditorGUIUtility.singleLineHeight * 2f + EditorGUIUtility.standardVerticalSpacing * 2f
                 : EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+        }
+
+        private float GetRepeatedUrlsElementHeight(int urlsCount)
+        {
+            return InfoBoxHeight + EditorGUIUtility.standardVerticalSpacing +
+                   (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing) * (urlsCount + 1);
         }
         
         private void InitLists(SerializedProperty property)

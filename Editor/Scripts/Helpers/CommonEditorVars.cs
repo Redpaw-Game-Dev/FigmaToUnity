@@ -8,6 +8,7 @@
         public const string FilterConditions = "_filterConditions";
         public const string Filter = "_filter";
         public const string IsFilterApplied = "_isFilterApplied";
+        public const string AreAllConditionsRequired = "_areAllConditionsRequired";
         public const string Image = "_image";
         public const string Name = "_name";
         public const string URL = "_url";

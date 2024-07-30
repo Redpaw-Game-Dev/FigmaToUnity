@@ -15,8 +15,11 @@ namespace LazyRedpaw.FigmaToUnity
         {
             InitFilter(property);
             SerializedProperty conditionsProp = property.FindPropertyRelative(CommonEditorVars.FilterConditions);
+            // return property.isExpanded
+            //     ? EditorGUIUtility.singleLineHeight * (conditionsProp.arraySize + 2) + EditorGUIUtility.standardVerticalSpacing * (conditionsProp.arraySize + 1) * 0.25f
+            //     : EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             return property.isExpanded
-                ? EditorGUIUtility.singleLineHeight * conditionsProp.arraySize + EditorGUIUtility.standardVerticalSpacing * conditionsProp.arraySize * 0.25f
+                ? GetConditionsHeight(conditionsProp.arraySize) + GetSettingsPartHeight()
                 : EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
         }
 
@@ -25,6 +28,7 @@ namespace LazyRedpaw.FigmaToUnity
             EditorGUI.BeginProperty(position, label, property);
             SerializedProperty conditionsProp = property.FindPropertyRelative(CommonEditorVars.FilterConditions);
             SerializedProperty isFilterAppliedProp = property.FindPropertyRelative(CommonEditorVars.IsFilterApplied);
+            SerializedProperty areAllConditionsRequiredProp = property.FindPropertyRelative(CommonEditorVars.AreAllConditionsRequired);
 
             GUI.Box(position, GUIContent.none, EditorStyles.helpBox);
 
@@ -34,9 +38,18 @@ namespace LazyRedpaw.FigmaToUnity
             if (property.isExpanded)
             {
                 EditorGUI.indentLevel++;
+                
                 elementRect.x -= CommonEditorVars.ToggleSize;
-                elementRect.y += EditorGUIUtility.standardVerticalSpacing;
+                elementRect.y += EditorGUIUtility.singleLineHeight;
+                float defaultLabelWidth = EditorGUIUtility.labelWidth;
+                EditorGUIUtility.labelWidth = LabelWidth * 1.65f;
+                EditorGUI.PropertyField(elementRect, areAllConditionsRequiredProp, new GUIContent("Make all conditions mandatory"));
+                EditorGUIUtility.labelWidth = defaultLabelWidth;
+                
+                elementRect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
                 elementRect.width = position.width;
+                EditorGUI.LabelField(elementRect, "Conditions", EditorStyles.boldLabel);
+                
                 for (int i = 0; i < 2; i++)
                 {
                     elementRect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
@@ -103,6 +116,16 @@ namespace LazyRedpaw.FigmaToUnity
             filterProp.InsertArrayElementAtIndex(filterProp.arraySize);
             SerializedProperty newElement = filterProp.GetArrayElementAtIndex(filterProp.arraySize - 1);
             newElement.managedReferenceValue = Activator.CreateInstance(type, name);
+        }
+
+        private float GetConditionsHeight(int count)
+        {
+            return EditorGUIUtility.singleLineHeight * count + EditorGUIUtility.standardVerticalSpacing * count * 0.25f;
+        }
+
+        private float GetSettingsPartHeight()
+        {
+            return EditorGUIUtility.singleLineHeight * 2f;
         }
     }
 }
