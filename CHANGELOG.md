@@ -25,3 +25,6 @@ ADDED:
 REMOVED:
 - Filter.
 - Some action buttons.
+
+## [1.0.0-preview.5] - 2024-12-13
+### Template path searching fix.

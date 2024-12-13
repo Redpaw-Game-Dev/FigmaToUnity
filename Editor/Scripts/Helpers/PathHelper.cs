@@ -8,7 +8,9 @@ namespace LazyRedpaw.FigmaToUnity
     {
         public static string FindFilePath(string fileName)
         {
-            string templatePath = Directory.GetFiles(Application.dataPath, fileName, SearchOption.AllDirectories)[0];
+            string searchPath = Application.dataPath;
+            searchPath = searchPath.Replace("/Assets", string.Empty);
+            string templatePath = Directory.GetFiles(searchPath, fileName, SearchOption.AllDirectories)[0];
             int index = templatePath.IndexOf("Assets", StringComparison.Ordinal);
             return templatePath.Substring(index, templatePath.Length - index);
         }
