@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Template name="RequestImageDataUXML" src="project://database/Assets/LazyRedpaw/FigmaToUnity/UI%20Toolkit/RequestImageData.uxml?fileID=9197481963319205126&amp;guid=661f0f3451a09924aaa33c491afb1026&amp;type=3#RequestImageData" />
+    <Style src="project://database/Assets/LazyRedpaw/FigmaToUnity/UI%20Toolkit/FTU%20Styles.uss?fileID=7433441132597879392&amp;guid=44cbcce794ce84844b7a532503b8080a&amp;type=3#FTU Styles" />
+    <ui:Instance template="RequestImageDataUXML" name="DataType" style="margin-left: 14px;" />
+    <ui:VisualElement name="Root" class="align-horizontal" style="flex-grow: 1; max-width: 98.3%; padding-top: 2px; padding-right: 5px; padding-bottom: 2px; padding-left: 5px;">
+        <ui:VisualElement name="IncludeGroup" class="horizontal-container align-horizontal" style="flex-basis: auto; margin-left: -5px; padding-right: 5px;">
+            <ui:Toggle binding-path="_isIncluded" name="_isIncluded" />
+        </ui:VisualElement>
+        <LazyRedpaw.FigmaToUnity.TexturePickerElement binding-path="_image" name="TexturePicker" style="margin-right: -20px;" />
+        <ui:VisualElement style="flex-grow: 1;">
+            <ui:VisualElement name="UrlGroup" class="horizontal-container align-horizontal">
+                <ui:Label tabindex="-1" text="URL" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="UrlLabel" class="horizontal-child label padding-left-space" />
+                <ui:TextField picking-mode="Ignore" name="_url" binding-path="_url" class="horizontal-child stretch-field flex-start" />
+            </ui:VisualElement>
+            <ui:VisualElement name="DeleteImageGroup" class="horizontal-container align-horizontal" style="flex-basis: auto;">
+                <ui:Label tabindex="-1" text="Delete image after removing item" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="IncludeLabel" class="horizontal-child label padding-left-space" />
+                <ui:Toggle binding-path="_needDeleteImage" name="_needDeleteImage" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

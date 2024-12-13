@@ -66,7 +66,6 @@ namespace LazyRedpaw.FigmaToUnity
                 }
             }
             _isRequestProcessing = false;
-            _requestImageDataList.FilterItems();
             EditorUtility.SetDirty(this);
             _requestProgressText = "Completed";
         }

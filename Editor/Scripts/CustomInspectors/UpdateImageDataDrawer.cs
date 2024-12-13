@@ -1,60 +1,52 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using System;
+using UnityEditor;
+using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
+using static LazyRedpaw.FigmaToUnity.Constants;
 
 namespace LazyRedpaw.FigmaToUnity
 {
-    [CustomPropertyDrawer(typeof(UpdateImageData), true)]
+    [CustomPropertyDrawer(typeof(UpdateImageData))]
     public class UpdateImageDataDrawer : PropertyDrawer
     {
-        private const float UpdateElementLabelWidth = 90f;
-        private const float TextureFieldSize = 48f;
-        
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            return TextureFieldSize + EditorGUIUtility.standardVerticalSpacing * 2f;
+            VisualElement root = new VisualElement();
+            VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(UpdateImageDataUXML));
+            tree.CloneTree(root);
+            EnumField enumDataType = root.Q<EnumField>(EnumDataType);
+            enumDataType.value = ImageDataType.UpdateImageData;
+            enumDataType.RegisterValueChangedCallback(evt => OnDataTypeChanged(property, evt));
+            TexturePickerElement texturePicker = root.Q<TexturePickerElement>(TexturePicker);
+            texturePicker.RegisterValueChangedCallback(evt => OnTextureChanged(property, evt));
+            return root;
         }
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        private void OnTextureChanged(SerializedProperty property, ChangeEvent<Object> evt)
         {
-            SerializedProperty imageProp = property.FindPropertyRelative(CommonEditorVars.Image);
-            SerializedProperty isIncludedProp = property.FindPropertyRelative(CommonEditorVars.IsIncluded);
-            SerializedProperty urlProp = property.FindPropertyRelative(CommonEditorVars.URL);
-            CheckEmptyName(property, imageProp);
-            
-            Rect elementRect = new Rect(position.x, position.y + EditorGUIUtility.standardVerticalSpacing,
-                TextureFieldSize, TextureFieldSize);
-            Texture2D selectedTexture = (Texture2D)EditorGUI.ObjectField(elementRect, imageProp.objectReferenceValue,
-                typeof(Texture2D), false);
-            if (EditorGUI.EndChangeCheck())
+            SerializedProperty imageProp = property.FindPropertyRelative(ImageProp);
+            if (evt.newValue != imageProp.objectReferenceValue)
             {
-                imageProp.objectReferenceValue = selectedTexture;
-                imageProp.serializedObject.ApplyModifiedProperties();
+                SerializedProperty assetPathProp = property.FindPropertyRelative(AssetPathProp);
+                assetPathProp.stringValue = AssetDatabase.GetAssetPath(evt.newValue);
+                property.serializedObject.ApplyModifiedProperties();
             }
-
-            elementRect.x += elementRect.width + CommonEditorVars.SpacingWidth;
-            elementRect.y += EditorGUIUtility.singleLineHeight * 0.33f;
-            elementRect.width = UpdateElementLabelWidth;
-            elementRect.height = EditorGUIUtility.singleLineHeight;
-            EditorGUI.LabelField(elementRect, "Is Included");
-            
-            elementRect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-            EditorGUI.LabelField(elementRect, "URL");
-
-            elementRect.x += elementRect.width;
-            elementRect.width = position.width - TextureFieldSize - UpdateElementLabelWidth - CommonEditorVars.SpacingWidth;
-            urlProp.stringValue = EditorGUI.TextField(elementRect, urlProp.stringValue);
-
-            elementRect.y -= EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-            elementRect.width = CommonEditorVars.ToggleSize;
-            isIncludedProp.boolValue = EditorGUI.Toggle(elementRect, isIncludedProp.boolValue);
         }
 
-        private void CheckEmptyName(SerializedProperty property, SerializedProperty imageProp)
+        private void OnDataTypeChanged(SerializedProperty property, ChangeEvent<Enum> evt)
         {
-            SerializedProperty nameProp = property.FindPropertyRelative(CommonEditorVars.Name);
-            if (imageProp.objectReferenceValue == null && string.IsNullOrEmpty(nameProp.stringValue))
+            if (evt.newValue.ToString() != ImageDataType.UpdateImageData.ToString())
             {
-                nameProp.stringValue = "MISSED_IMAGE";
+                SerializedProperty imageProp = property.FindPropertyRelative(ImageProp);
+                string name = string.Empty;
+                if (imageProp.objectReferenceValue != null)
+                {
+                    name = imageProp.objectReferenceValue.name;
+                }
+                string url = property.FindPropertyRelative(UrlProp).stringValue;
+                string assetPath = property.FindPropertyRelative(AssetPathProp).stringValue;
+                property.managedReferenceValue = new NewImageData(name, url, assetPath);
+                property.serializedObject.ApplyModifiedProperties();
             }
         }
     }

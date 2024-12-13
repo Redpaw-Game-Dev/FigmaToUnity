@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Template name="RequestImageDataUXML" src="project://database/Assets/LazyRedpaw/FigmaToUnity/UI%20Toolkit/RequestImageData.uxml?fileID=9197481963319205126&amp;guid=661f0f3451a09924aaa33c491afb1026&amp;type=3#RequestImageData" />
+    <Style src="project://database/Assets/LazyRedpaw/FigmaToUnity/UI%20Toolkit/FTU%20Styles.uss?fileID=7433441132597879392&amp;guid=44cbcce794ce84844b7a532503b8080a&amp;type=3#FTU Styles" />
+    <ui:Instance template="RequestImageDataUXML" name="DataType" />
+    <ui:VisualElement name="Root" class="horizontal-container align-horizontal" style="align-self: auto; max-width: 100%; margin-right: 9px; margin-left: 1px; padding-top: 2px; padding-right: 5px; padding-bottom: 2px; padding-left: 5px;">
+        <ui:Label tabindex="-1" text="File Name" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" name="Name" focusable="false" class="horizontal-child label" style="margin-left: -2px;" />
+        <ui:TextField picking-mode="Ignore" name="_name" binding-path="_name" class="horizontal-child stretch-field" style="padding-left: 8px; padding-right: 0; margin-right: 8px;" />
+        <ui:Label tabindex="-1" text="URL" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="false" name="URL" class="horizontal-child label padding-left-space" />
+        <ui:TextField picking-mode="Ignore" name="_url" binding-path="_url" class="horizontal-child stretch-field" />
+    </ui:VisualElement>
+</ui:UXML>

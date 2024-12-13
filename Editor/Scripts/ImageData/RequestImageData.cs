@@ -21,6 +21,13 @@ namespace LazyRedpaw.FigmaToUnity
         protected RequestImageData() { }
 
         protected RequestImageData(string url) => _url = url;
+        
+        protected RequestImageData(string name, string url, string assetPath = null)
+        {
+            _name = name;
+            _url = url;
+            _assetPath = assetPath;
+        }
 
         public virtual void UpdateAssetPath(string savePath)
         {

@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/LazyRedpaw/FigmaToUnity/UI%20Toolkit/FTU%20Styles.uss?fileID=7433441132597879392&amp;guid=44cbcce794ce84844b7a532503b8080a&amp;type=3#FTU Styles" />
+    <ui:VisualElement name="Root" class="horizontal-container" style="display: flex;">
+        <ui:VisualElement name="Content" style="flex-grow: 1; border-left-color: rgb(32, 32, 32); border-right-color: rgb(32, 32, 32); border-top-color: rgb(32, 32, 32); border-bottom-color: rgb(32, 32, 32); border-top-width: 0.1px; border-right-width: 0.1px; border-bottom-width: 0.1px; border-left-width: 0.1px; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; display: flex;">
+            <ui:Foldout text="Request Data List" name="Foldout" value="true" style="align-items: stretch; justify-content: flex-start; align-self: auto; margin-left: 12px;">
+                <ui:VisualElement name="ButtonsAndInfo" class="align-horizontal" style="margin-left: -27px; margin-right: 2px;">
+                    <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: flex-start;">
+                        <ui:VisualElement name="IncludeExcludeButtons" style="flex-grow: 0; flex-direction: row;">
+                            <ui:Button text="✓ Select All" parse-escape-sequences="true" display-tooltip-when-elided="true" name="IncludeAllButton" class="ftu-list-button" style="margin-right: 0;" />
+                            <ui:Button text="x Unselect All" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ExcludeAllButton" class="ftu-list-button" style="margin-left: 0;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:TextField picking-mode="Ignore" name="SizeField" readonly="true" focusable="false" style="flex-direction: row; width: 37px; justify-content: flex-start; -unity-text-align: upper-center;" />
+                </ui:VisualElement>
+                <ui:ListView show-add-remove-footer="false" binding-path="_data" reorderable="true" show-border="false" header-title="Request Data List" show-foldout-header="false" virtualization-method="DynamicHeight" show-alternating-row-backgrounds="All" horizontal-scrolling="false" name="DataList" usage-hints="-1" selection-type="Multiple" show-bound-collection-size="false" style="margin-left: -27px;" />
+            </ui:Foldout>
+        </ui:VisualElement>
+        <ui:VisualElement name="Footer" class="unity-list-view__footer" style="flex-grow: 1;">
+            <ui:Button text="-" parse-escape-sequences="true" display-tooltip-when-elided="true" name="RemoveButton" />
+            <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddButton" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

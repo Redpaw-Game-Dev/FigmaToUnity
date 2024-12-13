@@ -1,0 +1,87 @@
+:root {
+    --color-bg-primary: rgb(79, 79, 79);
+    --color-bg-secondary: rgb(63, 63, 63);
+    --space: 5px;
+}
+
+.align-horizontal {
+    flex-direction: row;
+}
+
+.align-vertical {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.stretch-field {
+    flex: 1;
+}
+
+.padding-space {
+    padding: var(--space);
+}
+
+.padding-top-space {
+    padding-top: var(--space);
+}
+
+.padding-left-space {
+    padding-left: var(--space);
+}
+
+.padding-right-space {
+    padding-right: var(--space);
+}
+
+.flex-start {
+    align-items: flex-start;
+    align-self: flex-start;
+}
+
+.label-padding {
+    padding-top: 3px;
+    padding-right: 2px;
+    padding-left: 5px;
+}
+
+.ftu-list-button {
+    -unity-font-style: bold;
+    width: 90px;
+    height: 18px;
+}
+
+.ftu-info-box-error {
+    background-color: rgb(60, 60, 60);
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    padding-top: 2px;
+    padding-right: 2px;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    color: rgb(255, 64, 64);
+}
+
+.ftu-border-error {
+    border-left-color: rgb(255, 64, 64);
+    border-right-color: rgb(255, 64, 64);
+    border-top-color: rgb(255, 64, 64);
+    border-bottom-color: rgb(255, 64, 64);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}

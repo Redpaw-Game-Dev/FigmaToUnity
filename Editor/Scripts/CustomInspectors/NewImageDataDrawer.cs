@@ -1,40 +1,40 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static LazyRedpaw.FigmaToUnity.Constants;
 
 namespace LazyRedpaw.FigmaToUnity
 {
-    [CustomPropertyDrawer(typeof(NewImageData), true)]
+    [CustomPropertyDrawer(typeof(NewImageData))]
     public class NewImageDataDrawer : PropertyDrawer
     {
-        private const float LabelWidth = 45f;
-        
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2f;
+            VisualElement root = new VisualElement();
+            VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(NewImageDataUXML));
+            tree.CloneTree(root);
+            EnumField enumDataType = root.Q<EnumField>(EnumDataType);
+            enumDataType.value = ImageDataType.NewImageData;
+            enumDataType.RegisterValueChangedCallback(evt => OnDataTypeChanged(property, evt));
+            return root;
         }
-
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        
+        private void OnDataTypeChanged(SerializedProperty property, ChangeEvent<Enum> evt)
         {
-            SerializedProperty nameProp = property.FindPropertyRelative(CommonEditorVars.Name);
-            SerializedProperty urlProp = property.FindPropertyRelative(CommonEditorVars.URL);
-            
-            Rect elementRect = new Rect(position.x, position.y + EditorGUIUtility.standardVerticalSpacing,
-                LabelWidth, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(elementRect, "Name");
-                    
-            float halfWidth = position.width * 0.5f;
-            elementRect.x += LabelWidth;
-            elementRect.width = halfWidth - LabelWidth - CommonEditorVars.SpacingWidth;
-            nameProp.stringValue = EditorGUI.TextField(elementRect, nameProp.stringValue);
-
-            elementRect.x += elementRect.width + CommonEditorVars.SpacingWidth;
-            elementRect.width = LabelWidth;
-            EditorGUI.LabelField(elementRect, "URL");
-                    
-            elementRect.x += LabelWidth;
-            elementRect.width = halfWidth - LabelWidth;
-
-            urlProp.stringValue = EditorGUI.TextField(elementRect, urlProp.stringValue);
+            if (evt.newValue.ToString() != ImageDataType.NewImageData.ToString())
+            {
+                string name = property.FindPropertyRelative(NameProp).stringValue;
+                string url = property.FindPropertyRelative(UrlProp).stringValue;
+                string assetPath = property.FindPropertyRelative(AssetPathProp).stringValue;
+                Texture2D image = null;
+                if (!string.IsNullOrEmpty(assetPath))
+                {
+                    image = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
+                }
+                property.managedReferenceValue = new UpdateImageData(name, url, assetPath, image);
+                property.serializedObject.ApplyModifiedProperties();
+            }
         }
     }
 }

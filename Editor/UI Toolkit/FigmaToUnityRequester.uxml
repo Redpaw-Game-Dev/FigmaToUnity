@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/FigmaToUnity/Editor/UI%20Toolkit/FTU%20Styles.uss?fileID=7433441132597879392&amp;guid=44cbcce794ce84844b7a532503b8080a&amp;type=3#FTU Styles" />
+    <ui:VisualElement name="Root" class="horizontal-container" style="align-self: auto; max-width: 100%; margin-right: 9px; margin-left: 1px; padding-top: 2px; padding-right: 5px; padding-bottom: 2px; padding-left: 5px;">
+        <ui:VisualElement name="TokenGroup" class="align-horizontal">
+            <ui:Label tabindex="-1" text="Figma Token" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" name="TokenLabel" focusable="false" class="horizontal-child label" style="padding-right: 46px;" />
+            <ui:TextField picking-mode="Ignore" name="_figmaToken" binding-path="_figmaToken" class="horizontal-child stretch-field" />
+        </ui:VisualElement>
+        <ui:VisualElement name="PathGroup" class="align-horizontal" style="flex-grow: 1; align-items: flex-start;">
+            <ui:Button text="Choose Save Path" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ChoosePathButton" style="margin-left: -1px;" />
+            <ui:TextField picking-mode="Ignore" name="SavePathField" binding-path="_savePath" class="horizontal-child stretch-field" />
+        </ui:VisualElement>
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PathErrorBox" class="ftu-info-box-error" style="display: none; visibility: visible; border-left-color: rgb(33, 33, 33); border-right-color: rgb(33, 33, 33); border-top-color: rgb(33, 33, 33); border-bottom-color: rgb(33, 33, 33); -unity-text-align: upper-left; margin-left: 124px;" />
+        <ui:Button text="Send Request" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SendRequestButton" />
+        <ui:ProgressBar value="0" title="progress" name="RequestProgressBar" binding-path="_requestProgress" high-value="1" />
+        <uie:PropertyField binding-path="_requestImageDataList" name="RequestDataList" />
+    </ui:VisualElement>
+</ui:UXML>

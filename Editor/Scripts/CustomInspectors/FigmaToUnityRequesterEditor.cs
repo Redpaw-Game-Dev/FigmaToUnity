@@ -1,87 +1,119 @@
-using System.IO;
+﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static LazyRedpaw.FigmaToUnity.Constants;
 
 namespace LazyRedpaw.FigmaToUnity
 {
-    [CustomEditor(typeof(FigmaToUnityRequester), true)]
-    [CanEditMultipleObjects]
+    [CustomEditor(typeof(FigmaToUnityRequester))]
     public class FigmaToUnityRequesterEditor : Editor
     {
-        private const float SavePathButtonWidth = 100f;
-        private const string DefaultSavePath = "Assets";
-        private readonly float _defaultLabelWidth = EditorGUIUtility.labelWidth;
-
-        private SerializedProperty _figmaTokenProp;
         private SerializedProperty _pathProp;
-        private SerializedProperty _requestImageDataListProp;
-        private SerializedProperty _progressProp;
-        private SerializedProperty _progressTextProp;
         private SerializedProperty _isRequestProcessingProp;
-
+        private SerializedProperty _requestProgressTextProp;
+        private Button _sendReqButton;
+        private Label _pathErrorBox;
+        private Button _choosePathButton;
+        private TextField _pathTextField;
+        private ProgressBar _requestProgressBar;
+        
         private void OnEnable()
         {
-            _figmaTokenProp = serializedObject.FindProperty("_figmaToken");
-            _pathProp = serializedObject.FindProperty("_savePath");
-            _requestImageDataListProp = serializedObject.FindProperty("_requestImageDataList");
-            _progressProp = serializedObject.FindProperty("_requestProgress");
-            _progressTextProp = serializedObject.FindProperty("_requestProgressText");
-            _isRequestProcessingProp = serializedObject.FindProperty("_isRequestProcessing");
-            _progressProp.floatValue = -1f;
-            serializedObject.ApplyModifiedProperties();
+            _pathProp = serializedObject.FindProperty(SavePathProp);
+            _isRequestProcessingProp = serializedObject.FindProperty(IsRequestProcessingProp);
+            _requestProgressTextProp = serializedObject.FindProperty(RequestProgressTextProp);
         }
-        
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
-            
-            EditorGUIUtility.labelWidth = SavePathButtonWidth;
-            EditorGUILayout.PropertyField(_figmaTokenProp);
-            EditorGUIUtility.labelWidth = _defaultLabelWidth;
-            
-            GUILayout.Space(EditorGUIUtility.standardVerticalSpacing);
 
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button(new GUIContent("Choose Path", "Choose file save path"), GUILayout.Width(SavePathButtonWidth)))
+        public override VisualElement CreateInspectorGUI()
+        {
+            VisualElement root = new VisualElement();
+            VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(FigmaToUnityRequesterUXML));
+            tree.CloneTree(root);
+
+            _sendReqButton = root.Q<Button>(SendRequestButton);
+            _sendReqButton.clicked += TrySendRequest;
+            
+            _pathErrorBox = root.Q<Label>(PathErrorBox);
+            
+            _choosePathButton = root.Q<Button>(ChoosePathButton);
+            _choosePathButton.clicked += OnChoosePathButtonClicked;
+            
+            _pathTextField = root.Q<TextField>(SavePathField);
+            _pathTextField.RegisterValueChangedCallback(OnPathTextChanged);
+            
+            _requestProgressBar = root.Q<ProgressBar>(RequestProgressBar);
+            _requestProgressBar.RegisterValueChangedCallback(OnProgressBarValueChanged);
+            _requestProgressBar.style.display = DisplayStyle.None;
+            
+            UpdateSendRequestButton();
+            
+            return root;
+        }
+
+        private void OnProgressBarValueChanged(ChangeEvent<float> evt)
+        {
+            UpdateSendRequestButton();
+            _requestProgressBar.title = _requestProgressTextProp.stringValue;
+        }
+
+        private void TrySendRequest()
+        {
+            ((FigmaToUnityRequester)target).TrySendRequest();
+            UpdateSendRequestButton();
+            _requestProgressBar.style.display = DisplayStyle.Flex;
+        }
+
+        private void OnPathTextChanged(ChangeEvent<string> evt)
+        {
+            UpdateSendRequestButton();
+        }
+
+        private void OnChoosePathButtonClicked()
+        {
+            string selectedPath = EditorUtility.OpenFolderPanel("Select Path", DefaultSavePath, "");
+            if (!string.IsNullOrEmpty(selectedPath))
             {
-                string selectedPath = EditorUtility.OpenFolderPanel("Select Path", DefaultSavePath, "");
-                if (!string.IsNullOrEmpty(selectedPath)) _pathProp.stringValue = selectedPath;
+                _pathProp.stringValue = selectedPath;
+                serializedObject.ApplyModifiedProperties();
+                UpdateSendRequestButton();
             }
-            _pathProp.stringValue = EditorGUILayout.TextField(_pathProp.stringValue);
-            EditorGUILayout.EndHorizontal();
-            bool isPathValid = (_pathProp.stringValue.StartsWith(Application.dataPath) ||
-                               _pathProp.stringValue.StartsWith(DefaultSavePath)) &&
-                               Directory.Exists( _pathProp.stringValue);
+        }
+
+        private bool ValidatePath()
+        {
             if (_pathProp.stringValue.StartsWith(Application.dataPath))
             {
                 _pathProp.stringValue = DefaultSavePath + _pathProp.stringValue.Substring(Application.dataPath.Length);
             }
             else if(!_pathProp.stringValue.StartsWith(DefaultSavePath))
             {
-                string errorMessage = "Please select an existing folder within the project directory.";
-                EditorGUILayout.HelpBox(errorMessage, MessageType.Error);
+                _pathErrorBox.text = "Please select an existing folder within the project directory.";
             }
             else if(!Directory.Exists( _pathProp.stringValue))
             {
-                string errorMessage = "The selected directory does not exist.";
-                EditorGUILayout.HelpBox(errorMessage, MessageType.Error);
+                _pathErrorBox.text = "The selected directory does not exist.";
             }
 
-            if (!isPathValid || _isRequestProcessingProp.boolValue) GUI.enabled = false;
-            if (GUILayout.Button(new GUIContent("Send Request", "Send web request to get images")))
+            bool isPathValid = (_pathProp.stringValue.StartsWith(Application.dataPath) ||
+                                _pathProp.stringValue.StartsWith(DefaultSavePath)) &&
+                               Directory.Exists(_pathProp.stringValue);
+            if (isPathValid)
             {
-                ((FigmaToUnityRequester)target).TrySendRequest();
+                _pathTextField.RemoveFromClassList(FtuBorderError);
+                _pathErrorBox.style.display = DisplayStyle.None;
             }
-            GUI.enabled = true;
-            if (_progressProp.floatValue >= 0f)
+            else
             {
-                EditorGUI.ProgressBar(EditorGUILayout.GetControlRect(), _progressProp.floatValue,
-                    $"{_progressTextProp.stringValue} {Mathf.RoundToInt(_progressProp.floatValue * 100f)}%");
+                _pathTextField.AddToClassList(FtuBorderError);
+                _pathErrorBox.style.display = DisplayStyle.Flex;
             }
-            
-            EditorGUILayout.PropertyField(_requestImageDataListProp);
-            serializedObject.ApplyModifiedProperties();
+            return isPathValid;
+        }
+
+        private void UpdateSendRequestButton()
+        {
+            _sendReqButton.SetEnabled(ValidatePath() && !_isRequestProcessingProp.boolValue);
         }
     }
 }
-

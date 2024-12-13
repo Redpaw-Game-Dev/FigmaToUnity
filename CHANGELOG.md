@@ -18,3 +18,10 @@ FIXED:
 
 ADDED:
 - Processing of non-existent directories.
+
+## [1.0.0-preview.4] - 2024-12-13
+### Editors remade with UI Toolkit.
+
+REMOVED:
+- Filter.
+- Some action buttons.

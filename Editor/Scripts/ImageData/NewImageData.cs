@@ -6,6 +6,12 @@
 
         public NewImageData() { }
         
+        public NewImageData(string name, string url, string assetPath = null) 
+            : base(name, url, assetPath)
+        {
+            
+        }
+        
         public override void UpdateAssetPath(string savePath)
         {
             if (string.IsNullOrEmpty(_name)) _name = "NONAME_IMAGE";

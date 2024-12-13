@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/LazyRedpaw/FigmaToUnity/UXML/FTU%20Styles.uss?fileID=7433441132597879392&amp;guid=44cbcce794ce84844b7a532503b8080a&amp;type=3#FTU Styles" />
+    <ui:VisualElement name="Root" class="align-horizontal" style="flex-grow: 1;">
+        <ui:VisualElement name="Texture" class="texture-picker__preview" style="flex-grow: 0; align-items: flex-start; width: 64px; height: 64px; background-color: rgb(55, 55, 55); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;" />
+        <uie:ObjectField name="Picker" allow-scene-objects="false" type="UnityEngine.Texture2D, UnityEngine.CoreModule" style="width: 20px; height: 20px; align-items: flex-end; transform-origin: center; translate: -23px 43px;" />
+    </ui:VisualElement>
+</ui:UXML>

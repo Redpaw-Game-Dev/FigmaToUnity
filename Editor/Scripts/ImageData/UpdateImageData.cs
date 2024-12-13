@@ -15,6 +15,12 @@ namespace LazyRedpaw.FigmaToUnity
         public UpdateImageData() { }
 
         public UpdateImageData(string url, string name) : base(url) => _name = name;
+        
+        public UpdateImageData(string name, string url, string assetPath = null, Texture2D image = null) 
+            : base(image?.name ?? name, url, assetPath)
+        {
+            _image = image;
+        }
 
         public void UpdateImage(Texture2D image) => _image = image;
 
