@@ -28,3 +28,6 @@ REMOVED:
 
 ## [1.0.0-preview.5] - 2024-12-13
 ### Template path searching fix.
+
+## [1.0.0-preview.6] - 2024-12-13
+### Another templates path searching fix.
