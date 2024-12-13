@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 using static LazyRedpaw.FigmaToUnity.Constants;
@@ -12,7 +13,8 @@ namespace LazyRedpaw.FigmaToUnity
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             VisualElement root = new VisualElement();
-            VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(UpdateImageDataUXML));
+            // VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(UpdateImageDataUXML));
+            VisualTreeAsset tree = Resources.Load<VisualTreeAsset>(UpdateImageDataUXML);
             tree.CloneTree(root);
             EnumField enumDataType = root.Q<EnumField>(EnumDataType);
             enumDataType.value = ImageDataType.UpdateImageData;

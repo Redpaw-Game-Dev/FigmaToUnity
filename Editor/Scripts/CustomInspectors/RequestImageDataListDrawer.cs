@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 using static LazyRedpaw.FigmaToUnity.Constants;
 
@@ -11,7 +12,8 @@ namespace LazyRedpaw.FigmaToUnity
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             VisualElement root = new VisualElement();
-            VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(RequestImageDataListUXML));
+            // VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(RequestImageDataListUXML));
+            VisualTreeAsset tree = Resources.Load<VisualTreeAsset>(RequestImageDataListUXML);
             tree.CloneTree(root);
             
             Button addButton = root.Q<Button>(AddButton);

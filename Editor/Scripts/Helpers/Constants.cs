@@ -4,10 +4,10 @@
     {
         public const string FtuBorderError = "ftu-border-error";
         
-        public const string FigmaToUnityRequesterUXML = "FigmaToUnityRequester.uxml";
-        public const string NewImageDataUXML = "NewImageData.uxml";
-        public const string UpdateImageDataUXML = "UpdateImageData.uxml";
-        public const string RequestImageDataListUXML = "RequestImageDataList.uxml";
+        public const string FigmaToUnityRequesterUXML = "FigmaToUnityRequester";
+        public const string NewImageDataUXML = "NewImageData";
+        public const string UpdateImageDataUXML = "UpdateImageData";
+        public const string RequestImageDataListUXML = "RequestImageDataList";
         
         public const string DefaultSavePath = "Assets";
         

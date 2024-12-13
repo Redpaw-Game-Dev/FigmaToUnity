@@ -12,7 +12,8 @@ namespace LazyRedpaw.FigmaToUnity
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             VisualElement root = new VisualElement();
-            VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(NewImageDataUXML));
+            // VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(NewImageDataUXML));
+            VisualTreeAsset tree = Resources.Load<VisualTreeAsset>(NewImageDataUXML);
             tree.CloneTree(root);
             EnumField enumDataType = root.Q<EnumField>(EnumDataType);
             enumDataType.value = ImageDataType.NewImageData;

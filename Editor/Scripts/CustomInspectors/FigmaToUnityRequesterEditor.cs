@@ -28,7 +28,9 @@ namespace LazyRedpaw.FigmaToUnity
         public override VisualElement CreateInspectorGUI()
         {
             VisualElement root = new VisualElement();
-            VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(FigmaToUnityRequesterUXML));
+            // VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(FigmaToUnityRequesterUXML));
+            // VisualTreeAsset tree = Resources.Load<VisualTreeAsset>(PathHelper.FindFilePath(FigmaToUnityRequesterUXML));
+            VisualTreeAsset tree = Resources.Load<VisualTreeAsset>(FigmaToUnityRequesterUXML);
             tree.CloneTree(root);
 
             _sendReqButton = root.Q<Button>(SendRequestButton);
