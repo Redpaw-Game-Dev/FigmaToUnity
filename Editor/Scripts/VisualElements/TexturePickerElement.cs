@@ -1,10 +1,9 @@
 ﻿using System;
-using System.IO;
-using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
+using static LazyRedpaw.FigmaToUnity.Constants;
 
 namespace LazyRedpaw.FigmaToUnity
 {
@@ -12,8 +11,6 @@ namespace LazyRedpaw.FigmaToUnity
     {
         public new class UxmlFactory : UxmlFactory<TexturePickerElement, UxmlTraits> { }
         public new class UxmlTraits : BindableElement.UxmlTraits { }
-        
-        private const string TemplateFileName = "TexturePicker.uxml";
         
         private VisualElement _textureElement;
         private ObjectField _objectField;
@@ -41,7 +38,7 @@ namespace LazyRedpaw.FigmaToUnity
         
         public TexturePickerElement()
         {
-            VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(PathHelper.FindFilePath(TemplateFileName));
+            VisualTreeAsset tree = Resources.Load<VisualTreeAsset>(TexturePickertUXML);
 
             TemplateContainer container = tree.CloneTree();
             _textureElement = container.Query<VisualElement>("Texture");

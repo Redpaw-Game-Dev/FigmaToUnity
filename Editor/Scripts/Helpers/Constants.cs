@@ -8,6 +8,7 @@
         public const string NewImageDataUXML = "NewImageData";
         public const string UpdateImageDataUXML = "UpdateImageData";
         public const string RequestImageDataListUXML = "RequestImageDataList";
+        public const string TexturePickertUXML = "TexturePicker";
         
         public const string DefaultSavePath = "Assets";
         

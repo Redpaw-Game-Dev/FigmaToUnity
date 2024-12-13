@@ -34,3 +34,6 @@ REMOVED:
 
 ## [1.0.0-preview.7] - 2024-12-13
 ### Templates loading fix.
+
+## [1.0.0-preview.8] - 2024-12-13
+### Texture picker template loading fix.
