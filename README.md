@@ -31,7 +31,8 @@ Unity 2021.3 or newer.
    ![Знімок екрана 2024-12-14 083909](https://github.com/user-attachments/assets/ef7dd082-ce21-4ebb-91f9-88e06e610300)
 
    
-6. Press "Send Request" and wait for the download to complete.![Знімок екрана 2024-12-14 084836](https://github.com/user-attachments/assets/0409832a-f8d8-4a02-a857-8fd773319fbb)
+6. Press "Send Request" and wait for the download to complete.![Знімок екрана 2024-12-14 090724](https://github.com/user-attachments/assets/759222b8-dc26-41ba-8dda-dd5dce81e27b)
+
 
 
 ## Documentation
