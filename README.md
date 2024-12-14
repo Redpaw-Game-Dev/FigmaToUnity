@@ -41,11 +41,10 @@ Unity 2021.3 or newer.
 	- A new file name.
 	- The URL of the element from Figma.
 - **UpdateImageData** type for already downloaded images. Elements of this type will be created automatically when the request is processed. But you can create it manually if you need to. It contains:
-	- A reference of the downloaded image.
 	- A toggle to include or exclude this element from request.
+	- A reference of the downloaded image.
 	- The URL of the element from Figma.
-	- The "x" button to delete an image from the project.
-	- The "-" button to remove an item from the list.
+	- A toggle to delete the image referenced by the item from the project after the item is removed from the data list.
  
 **URL copying**
 - To copy URL select the image you want and click the right mouse button to call the context menu, then select "Copy/Paste as" -> "Copy link to selection".![Знімок екрана 2024-12-14 081417](https://github.com/user-attachments/assets/7646631d-dcd3-4c79-9073-908d702510e0)
