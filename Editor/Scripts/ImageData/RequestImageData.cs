@@ -34,6 +34,9 @@ namespace LazyRedpaw.FigmaToUnity
             if (string.IsNullOrEmpty(_assetPath))
             {
                 _assetPath = AssetDatabase.GenerateUniqueAssetPath($"{savePath}/{_name}.png");
+                int startIndex = _assetPath.IndexOf("Assets", StringComparison.Ordinal);
+                _assetPath = _assetPath.Substring(startIndex);
+                
                 _name = Path.GetFileNameWithoutExtension(_assetPath);
             }
         }

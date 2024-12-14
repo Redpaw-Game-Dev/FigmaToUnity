@@ -51,7 +51,7 @@ namespace LazyRedpaw.FigmaToUnity
                 foreach (var imageIdUrlPair in data.Images)
                 {
                     KeyValuePair<int, RequestImageData> indexImageData = requestsData[i].GetItemByFigmaId(imageIdUrlPair.Key);
-                    _requestProgressText = $"Loading {indexImageData.Value.Name}";
+                    _requestProgressText = $"Loading {indexImageData.Value.Name} {_requestProgress * 100f:0}%";
                     Texture2D image = await WebRequestHelper.DownloadImageByUrl(imageIdUrlPair.Value);
                     _requestProgress += _progressStep;
                     indexImageData.Value.UpdateAssetPath(_savePath);

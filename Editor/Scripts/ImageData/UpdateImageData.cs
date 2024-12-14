@@ -7,6 +7,7 @@ namespace LazyRedpaw.FigmaToUnity
     {
         [SerializeField] protected Texture2D _image;
         [SerializeField] protected bool _isIncluded = true;
+        [SerializeField] protected bool _needDeleteImage;
 
         public Texture2D Image => _image;
         public override bool IsIncluded => _isIncluded;
