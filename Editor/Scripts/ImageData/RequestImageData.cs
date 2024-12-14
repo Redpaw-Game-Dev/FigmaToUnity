@@ -46,7 +46,7 @@ namespace LazyRedpaw.FigmaToUnity
             _figmaId = _url.ExtractString("node-id=", "&t=").Replace("-", ":");
         }
 
-        public UpdateImageData ToUpdateImageData() => new(_url, _name);
+        public UpdateImageData ToUpdateImageData() => new(_name, _url, _assetPath);
     }
 }
 

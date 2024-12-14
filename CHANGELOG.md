@@ -40,3 +40,6 @@ REMOVED:
 
 ## [1.0.0-preview.9] - 2024-12-14
 ### Fixed deletion of images.
+
+## [1.0.0-preview.10] - 2024-12-14
+### Fixed asset path generation for new images.
